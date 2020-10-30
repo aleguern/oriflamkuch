@@ -11,6 +11,10 @@ export const StyledCard = styled.div`
   padding: 1em 1em;
   cursor: pointer;
   user-select: none;
+
+  &.isSelected {
+    background-color: pink;
+  }
 `;
 
 export const Image = styled.div`

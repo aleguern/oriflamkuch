@@ -5,10 +5,11 @@ import Hand from './components/Hand';
 
 function App() {
   const [state, dispatch] = useCount();
+
   return (
     <>
-      <Board cards={state.board} />
-      <Hand cards={state.hand} />
+      <Board />
+      <Hand />
     </>
   );
 }

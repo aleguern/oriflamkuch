@@ -1,7 +1,8 @@
 import React from 'react';
-import { CardWrapper } from './Board';
-import { actions, useCount } from '../count-context';
 import styled from 'styled-components';
+import { useCount } from '../count-context';
+import isBoardEmpty from '../services/board.service';
+import { CardWrapper } from './Board';
 import Card from './Card';
 
 const StyledHand = styled.div`
@@ -13,21 +14,26 @@ const StyledHand = styled.div`
 
 export default function Hand(props) {
   const [state, dispatch] = useCount();
-  const cards = props.cards || [];
 
-  const playCard = (card) => {
-    dispatch({ type: 'ADD_CARD_TO_BOARD', card });
+  const selectCard = (card) => {
+    isBoardEmpty(state.board)
+      ? dispatch({ type: 'ADD_CARD_TO_BOARD', card })
+      : dispatch({ type: 'SELECT_CARD', card });
   };
 
   return (
     <StyledHand>
       <CardWrapper>
-        {cards.length === 0 ? (
+        {state.hand.length === 0 ? (
           <p>Plus de cartes</p>
         ) : (
-          cards.length > 0 &&
-          cards.map((card) => (
-            <Card card={card} onClick={(e) => playCard(card)} key={card.id} />
+          state.hand.map((card) => (
+            <Card
+              className={card.isSelected ? 'isSelected' : ''}
+              card={card}
+              onClick={() => selectCard(card)}
+              key={card.id}
+            />
           ))
         )}
       </CardWrapper>
