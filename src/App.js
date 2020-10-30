@@ -1,12 +1,15 @@
 import React from 'react';
-import Counter from './counter';
-import { CountProvider } from './count-context';
+import { useCount } from './count-context';
+import Board from './components/Board';
+import Hand from './components/Hand';
 
 function App() {
+  const [state, dispatch] = useCount();
   return (
-    <CountProvider>
-      <Counter />
-    </CountProvider>
+    <>
+      <Board cards={state.board} />
+      <Hand cards={state.hand} />
+    </>
   );
 }
 
