@@ -1,102 +1,16 @@
 import React from 'react';
+import { PLAYERS, STEPS, CARDS } from './mocks';
 const CountStateContext = React.createContext();
 const CountDispatchContext = React.createContext();
 
-const CARDS = [
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 1,
-    id: 0,
-    name: 'ESPION',
-    effect: `Volez 1 à un joueur dont l'une des cartes est adjacentes`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 1,
-    name: 'SEIGNEUR',
-    effect: `Gagnez 1 et 1 supplémentaire par carte adjacente de votre famille`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 2,
-    name: 'ARCHER',
-    effect: `Éliminez la première ou la dernière carte de la file`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 3,
-    name: 'DECRET ROYAL',
-    effect: `Déplacez une carte n'importe où dans la file sauf sur une autre carte. Défaussez le Décret Royal`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 4,
-    name: 'SOLDAT',
-    effect: `Éliminez une carte adjacente`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 5,
-    name: 'HÉRITIER',
-    effect: `S'il n'y a pas d'autre carte révélée du même nom, gagnez 2`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 6,
-    name: 'ASSASSINAT',
-    effect: `Éliminez une carte n'importe où dans la file. Défaussez l'assassinat`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 7,
-    name: 'CHANGEFORME',
-    effect: `Copiez la capacité d'un personnage révélé adjacent`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 8,
-    name: 'EMBUSCADE',
-    effect: `Embuscade`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    id: 9,
-    name: 'COMPLOT',
-    effect: `Gagnez le double de pièces présents sur le complot. Défaussez le complot`,
-  },
-];
-
-export const STEPS = { PLAY: 'PLAY', REVEAL: 'REVEAL' };
-
-const PLAYERS = ['Antoine', 'Sloane', 'Benjamin'];
-
 const gameState = {
-  hand: CARDS.filter((el, id) => id < 5),
+  hand: CARDS.sort(() => 0.5 - Math.random()).filter((_, id) => id < 6),
   board: [],
   game: {
-    turn: 1,
     player: PLAYERS[0],
     step: STEPS.PLAY,
     revealIndex: 0,
+    effect: null
   },
 };
 
@@ -106,6 +20,10 @@ export const actions = {
   ADD_SELECTED_CARD_TO_BOARD: 'ADD_SELECTED_CARD_TO_BOARD',
   NEXT_PLAYER: 'NEXT_PLAYER',
   REVEAL_CARD: 'REVEAL_CARD',
+  USE_EFFECT: 'USE_EFFECT',
+  CASH_IN: 'CASH_IN',
+  CHANGE_STEP: 'CHANGE_STEP',
+  KILL: 'KILL'
 };
 
 function countReducer(state, action) {
@@ -144,6 +62,42 @@ function countReducer(state, action) {
         game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
       };
     }
+    case actions.CASH_IN: {
+      return {
+        ...state,
+        board: state.board.map((card) =>
+          card.id === action.card.id ? { ...card, money: card.money + 1 } : card
+        ),
+        game: {
+          ...state.game,
+          revealIndex: state.game.revealIndex + 1,
+        },
+      };
+    }
+    case actions.USE_EFFECT: {
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          effect: 'chose',
+        },
+      };
+    }
+    case actions.CHANGE_STEP: {
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          step: action.step,
+          revealIndex: 0,
+          player: PLAYERS[0],
+        },
+      };
+    }
+    case actions.KILL : {
+      console.log("kill")
+      return state;
+    }
     case actions.NEXT_PLAYER: {
       const currentPlayerIndex = PLAYERS.findIndex(
         (player) => player === state.game.player
@@ -166,6 +120,7 @@ function countReducer(state, action) {
     }
   }
 }
+
 function CountProvider({ children }) {
   const [state, dispatch] = React.useReducer(countReducer, gameState);
   return (

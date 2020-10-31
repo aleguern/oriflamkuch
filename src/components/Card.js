@@ -25,6 +25,11 @@ const Description = styled.div`
 
 const MoneyCount = styled.div`
   color: white;
+  border: 1px solid white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
 `;
 
 export default function Card(props) {
@@ -41,7 +46,7 @@ export default function Card(props) {
           <Description>{effect}</Description>
         </>
       ) : (
-        <MoneyCount>{money !== 0 && money }</MoneyCount>
+        money !== 0 && <MoneyCount>{money}</MoneyCount>
       )}
     </StyledCard>
   );

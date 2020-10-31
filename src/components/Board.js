@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { actions, useCount } from '../count-context';
 import Card from './Card';
@@ -33,6 +33,13 @@ export default function Board() {
 
   const isCurrentId = (index) => state.game.revealIndex === index;
 
+  useEffect(() => {
+    const index = state.game.revealIndex;
+    const card = state.board[index];
+
+    card?.effect(dispatch);
+  }, [state.game.effect]);
+
   return (
     <CardWrapper>
       <Slot>
@@ -42,15 +49,27 @@ export default function Board() {
             {isRevealStep() && isCurrentId(id) && (
               <>
                 <Indicator />
-                <button
-                  onClick={() => dispatch({ type: actions.REVEAL_CARD, card })}
-                >
-                  Révéler
-                </button>
                 {card.isRevealed ? (
-                  <button>Utiliser l'effet</button>
+                  <button
+                    onClick={() => dispatch({ type: actions.USE_EFFECT, card })}
+                  >
+                    Utiliser l'effet
+                  </button>
                 ) : (
-                  <button>Encaisser</button>
+                  <>
+                    <button
+                      onClick={() =>
+                        dispatch({ type: actions.REVEAL_CARD, card })
+                      }
+                    >
+                      Révéler
+                    </button>
+                    <button
+                      onClick={() => dispatch({ type: actions.CASH_IN, card })}
+                    >
+                      Encaisser
+                    </button>
+                  </>
                 )}
               </>
             )}
