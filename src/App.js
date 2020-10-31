@@ -1,13 +1,12 @@
 import React from 'react';
-import { useCount } from './count-context';
 import Board from './components/Board';
+import GameStatus from './components/GameStatus';
 import Hand from './components/Hand';
 
 function App() {
-  const [state, dispatch] = useCount();
-
   return (
     <>
+      <GameStatus />
       <Board />
       <Hand />
     </>

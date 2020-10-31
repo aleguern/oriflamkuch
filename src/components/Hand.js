@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useCount } from '../count-context';
-import isBoardEmpty from '../services/board.service';
 import { CardWrapper } from './Board';
 import Card from './Card';
 
@@ -16,9 +15,7 @@ export default function Hand(props) {
   const [state, dispatch] = useCount();
 
   const selectCard = (card) => {
-    isBoardEmpty(state.board)
-      ? dispatch({ type: 'ADD_CARD_TO_BOARD', card })
-      : dispatch({ type: 'SELECT_CARD', card });
+    dispatch({ type: 'SELECT_CARD', card });
   };
 
   return (

@@ -8,29 +8,41 @@ export const StyledCard = styled.div`
   border: 2px solid palevioletred;
   color: palevioletred;
   margin: 0 1em;
-  padding: 1em 1em;
+  padding: 10px 0.5em;
   cursor: pointer;
   user-select: none;
+  background: ${({ card }) => (card.isRevealed ? 'white' : 'palevioletred')};
 
   &.isSelected {
     background-color: pink;
   }
 `;
 
-export const Image = styled.div`
-  width: 100%;
-  height: 120px;
-  border: 1px solid palevioletred;
+const Description = styled.div`
   margin: 10px 0;
+  font-size: 12px;
+`;
+
+const MoneyCount = styled.div`
+  color: white;
 `;
 
 export default function Card(props) {
-  const title = props.card.title || 'title undefined';
+  const name = props.card.name || 'title undefined';
+  const effect = props.card.effect || 'description undefined';
+  const isRevealed = props.card.isRevealed || false;
+  const money = props.card.money || 0;
 
   return (
     <StyledCard {...props}>
-      <div>{title}</div>
-      <Image />
+      {isRevealed ? (
+        <>
+          <div>{name}</div>
+          <Description>{effect}</Description>
+        </>
+      ) : (
+        <MoneyCount>{money !== 0 && money }</MoneyCount>
+      )}
     </StyledCard>
   );
 }
