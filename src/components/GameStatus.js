@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { actions, useCount } from '../count-context';
-import { STEPS, PLAYERS } from '../mocks';
+import { STEPS } from '../mocks';
 
 const StyledGameStatus = styled.div`
   text-align: center;

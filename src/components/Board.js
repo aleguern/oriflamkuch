@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { actions, useCount } from '../count-context';
 import Card from './Card';
@@ -28,6 +28,7 @@ export const CardWrapper = styled.div`
 
 export default function Board() {
   const [state, dispatch] = useCount();
+  const [effect, setEffect] = useState();
 
   const isRevealStep = () => state.game.step === 'REVEAL';
 
@@ -36,16 +37,23 @@ export default function Board() {
   useEffect(() => {
     const index = state.game.revealIndex;
     const card = state.board[index];
+    const callback = card?.effect;
 
-    card?.effect(dispatch);
+    if (card?.effect) {
+      setEffect(() => callback);
+    }
   }, [state.game.effect]);
+
+  const chose = (card) => {
+    effect(dispatch, card);
+  };
 
   return (
     <CardWrapper>
       <Slot>
         {state.board.map((card, id) => (
           <Flex key={card.id}>
-            <Card card={card} />
+            <Card card={card} onClick={() => chose(card)} />
             {isRevealStep() && isCurrentId(id) && (
               <>
                 <Indicator />

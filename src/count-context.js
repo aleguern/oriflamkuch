@@ -4,13 +4,13 @@ const CountStateContext = React.createContext();
 const CountDispatchContext = React.createContext();
 
 const gameState = {
-  hand: CARDS.sort(() => 0.5 - Math.random()).filter((_, id) => id < 6),
+  hand: CARDS.filter((_, id) => id < 6),
   board: [],
   game: {
     player: PLAYERS[0],
     step: STEPS.PLAY,
     revealIndex: 0,
-    effect: null
+    effect: null,
   },
 };
 
@@ -23,7 +23,7 @@ export const actions = {
   USE_EFFECT: 'USE_EFFECT',
   CASH_IN: 'CASH_IN',
   CHANGE_STEP: 'CHANGE_STEP',
-  KILL: 'KILL'
+  KILL: 'KILL',
 };
 
 function countReducer(state, action) {
@@ -32,10 +32,14 @@ function countReducer(state, action) {
     case actions.ADD_SELECTED_CARD_TO_BOARD: {
       const selectedCard = state.hand.find((card) => card.isSelected);
 
-      selectedCard.isRevealed = false;
-
-      const addToEnd = [...state.board, selectedCard];
-      const addToStart = [selectedCard, ...state.board];
+      const addToEnd = [
+        ...state.board,
+        { ...selectedCard, isRevealed: true, isSelected: false },
+      ];
+      const addToStart = [
+        { ...selectedCard, isRevealed: true, isSelected: false },
+        ...state.board,
+      ];
 
       return {
         ...state,
@@ -94,9 +98,13 @@ function countReducer(state, action) {
         },
       };
     }
-    case actions.KILL : {
-      console.log("kill")
-      return state;
+    case actions.KILL: {
+      console.log(action.card);
+
+      return {
+        ...state,
+        board: state.board.filter((card) => card.id !== action.card.id),
+      };
     }
     case actions.NEXT_PLAYER: {
       const currentPlayerIndex = PLAYERS.findIndex(

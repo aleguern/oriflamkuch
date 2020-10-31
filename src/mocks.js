@@ -1,6 +1,15 @@
-import { actions } from "./count-context";
+import { actions } from './count-context';
 
 export const CARDS = [
+  {
+    isSelected: false,
+    isRevealed: true,
+    money: 0,
+    effect: (dispatch, card) => dispatch({ type: actions.KILL, card }),
+    id: 6,
+    name: 'ASSASSINAT',
+    description: `Éliminez une carte n'importe où dans la file. Défaussez l'assassinat`,
+  },
   {
     isSelected: false,
     isRevealed: true,
@@ -54,15 +63,6 @@ export const CARDS = [
     id: 5,
     name: 'HÉRITIER',
     description: `S'il n'y a pas d'autre carte révélée du même nom, gagnez 2`,
-  },
-  {
-    isSelected: false,
-    isRevealed: true,
-    money: 0,
-    effect: (dispatch) => dispatch({type: actions.KILL}),
-    id: 6,
-    name: 'ASSASSINAT',
-    description: `Éliminez une carte n'importe où dans la file. Défaussez l'assassinat`,
   },
   {
     isSelected: false,

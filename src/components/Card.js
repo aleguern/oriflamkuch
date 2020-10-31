@@ -16,6 +16,10 @@ export const StyledCard = styled.div`
   &.isSelected {
     background-color: pink;
   }
+
+  &:hover {
+    box-shadow: 0 0 0 2pt red;
+  }
 `;
 
 const Description = styled.div`
@@ -34,7 +38,7 @@ const MoneyCount = styled.div`
 
 export default function Card(props) {
   const name = props.card.name || 'title undefined';
-  const effect = props.card.effect || 'description undefined';
+  const description = props.card.description || 'description undefined';
   const isRevealed = props.card.isRevealed || false;
   const money = props.card.money || 0;
 
@@ -43,7 +47,7 @@ export default function Card(props) {
       {isRevealed ? (
         <>
           <div>{name}</div>
-          <Description>{effect}</Description>
+          <Description>{description}</Description>
         </>
       ) : (
         money !== 0 && <MoneyCount>{money}</MoneyCount>
