@@ -4,6 +4,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: {
       shouldSelect: true,
@@ -18,6 +19,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: null,
     id: 0,
@@ -27,6 +29,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: {
       shouldSelect: false,
@@ -41,6 +44,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: (dispatch, card) => {
       dispatch({ type: actions.KILL, card });
@@ -52,6 +56,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: null,
     id: 3,
@@ -61,6 +66,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: (dispatch, card) => {
       dispatch({ type: actions.KILL, card });
@@ -72,6 +78,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: null,
     id: 5,
@@ -81,6 +88,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: null,
     id: 7,
@@ -90,6 +98,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: null,
     id: 8,
@@ -99,6 +108,7 @@ export const CARDS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: null,
     id: 9,
@@ -115,6 +125,7 @@ export const SEIGNEURS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: {
       shouldSelect: false,
@@ -129,6 +140,7 @@ export const SEIGNEURS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: {
       shouldSelect: false,
@@ -143,6 +155,7 @@ export const SEIGNEURS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: {
       shouldSelect: false,
@@ -157,6 +170,7 @@ export const SEIGNEURS = [
   {
     isSelected: false,
     isRevealed: true,
+    player: 'Antoine',
     money: 0,
     effect: {
       shouldSelect: false,

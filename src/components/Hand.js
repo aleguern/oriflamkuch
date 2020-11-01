@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useCount } from '../count-context';
-import { CardWrapper } from './Board';
+import { CardWrapper } from '../styles';
 import Card from './Card';
 
 const StyledHand = styled.div`

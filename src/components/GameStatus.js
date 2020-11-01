@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { actions, useCount } from '../count-context';
 import { STEPS } from '../mocks';
+import { FlexRow } from '../styles';
 
 const StyledGameStatus = styled.div`
   text-align: center;
@@ -23,16 +24,25 @@ const GameStatus = () => {
   }, [state.game]);
 
   return (
-    <StyledGameStatus>
-      {state.game.step === 'PLAY' ? (
-        <div>
-          À <strong>{state.game.player}</strong> de jouer
-        </div>
-      ) : (
-        <div>On révèle</div>
-      )}
-      <div>Sens du jeu : →</div>
-    </StyledGameStatus>
+    <FlexRow>
+      <StyledGameStatus>
+        {state.game.step === 'PLAY' ? (
+          <div>
+            À <strong>{state.game.player}</strong> de jouer
+          </div>
+        ) : (
+          <div>On révèle</div>
+        )}
+        <div>Sens du jeu : →</div>
+      </StyledGameStatus>
+      <StyledGameStatus>
+        {Object.keys(state.players).map((player, id) => (
+          <div key={id}>
+            {player}: {state.players[player].money}
+          </div>
+        ))}
+      </StyledGameStatus>
+    </FlexRow>
   );
 };
 

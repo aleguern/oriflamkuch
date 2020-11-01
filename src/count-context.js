@@ -1,5 +1,5 @@
 import React from 'react';
-import { PLAYERS, STEPS, CARDS, SEIGNEURS } from './mocks';
+import { PLAYERS, SEIGNEURS, STEPS } from './mocks';
 const CountStateContext = React.createContext();
 const CountDispatchContext = React.createContext();
 
@@ -18,6 +18,8 @@ const updateObject = (oldObject, newValues) =>
 const updateItemInArray = (array, itemId, updateItemCallback) =>
   array.map((item) => (item.id !== itemId ? item : updateItemCallback(item)));
 
+const cardAlreadySelected = (cards) => cards.some(card => card.isSelected)
+
 const gameState = {
   hand: SEIGNEURS.filter((_, id) => id < 6),
   board: [],
@@ -27,15 +29,10 @@ const gameState = {
     revealIndex: 0,
     effect: null,
   },
-  players: {
-    Antoine: {
-      money: 1,
-    },
-  },
+  players: PLAYERS.reduce((obj, item) => ((obj[item] = { money: 1 }), obj), {}),
 };
 
 export const actions = {
-  ADD_CARD_TO_BOARD: 'ADD_CARD_TO_BOARD',
   SELECT_CARD: 'SELECT_CARD',
   ADD_SELECTED_CARD_TO_BOARD: 'ADD_SELECTED_CARD_TO_BOARD',
   NEXT_PLAYER: 'NEXT_PLAYER',
@@ -69,7 +66,7 @@ function countReducer(state, action) {
       });
     }
     case actions.SELECT_CARD: {
-      if (state.game.step === STEPS.REVEAL) return state;
+      if (state.game.step === STEPS.REVEAL || cardAlreadySelected(state.hand)) return state;
 
       return updateObject(state, {
         hand: state.hand.map((card) =>
@@ -78,12 +75,22 @@ function countReducer(state, action) {
       });
     }
     case actions.REVEAL_CARD: {
+      console.log(
+        state.players[action.card.player],
+        [action.card.player],
+        action.card
+      );
       return updateObject(state, {
         board: updateItemInArray(state.board, action.card.id, (card) =>
           updateObject(card, { isRevealed: true })
         ),
         game: updateObject(state.game, {
           revealIndex: state.game.revealIndex + 1,
+        }),
+        players: updateObject(state.players, {
+          [action.card.player]: {
+            money: state.players[action.card.player].money + action.card.money,
+          },
         }),
       });
     }
@@ -93,6 +100,7 @@ function countReducer(state, action) {
       return updateObject(state, {
         game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
         players: {
+          ...state.players,
           Antoine: { money: state.players.Antoine.money + 1 + money },
         },
       });

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { actions, useCount } from '../count-context';
+import { CardWrapper, FlexColumn } from '../styles';
 import Card from './Card';
 import Slot from './Slot';
 
@@ -13,17 +14,6 @@ const Indicator = styled.i`
   -webkit-transform: rotate(-135deg);
   width: 1px;
   margin: 20px auto;
-`;
-
-const Flex = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-export const CardWrapper = styled.div`
-  height: 100%;
-  display: flex;
-  justify-content: center;
 `;
 
 export default function Board() {
@@ -49,16 +39,18 @@ export default function Board() {
     }
   }, [state.game.effect]);
 
-  const chose = (card) => {
-    effect(dispatch, card);
+  const selectCard = (card) => {
+    if (effect) {
+      effect(dispatch, card);
+    }
   };
 
   return (
     <CardWrapper>
       <Slot>
         {state.board.map((card, id) => (
-          <Flex key={card.id}>
-            <Card card={card} onClick={() => chose(card)} />
+          <FlexColumn key={card.id}>
+            <Card card={card} onClick={() => selectCard(card)} />
             {isRevealStep() && isCurrentId(id) && (
               <>
                 <Indicator />
@@ -86,7 +78,7 @@ export default function Board() {
                 )}
               </>
             )}
-          </Flex>
+          </FlexColumn>
         ))}
       </Slot>
     </CardWrapper>
