@@ -12,6 +12,12 @@ const numberOfSideSiblings = (array, element) => {
   );
 };
 
+const updateObject = (oldObject, newValues) =>
+  Object.assign({}, oldObject, newValues);
+
+const updateItemInArray = (array, itemId, updateItemCallback) =>
+  array.map((item) => (item.id !== itemId ? item : updateItemCallback(item)));
+
 const gameState = {
   hand: SEIGNEURS.filter((_, id) => id < 6),
   board: [],
@@ -39,7 +45,7 @@ export const actions = {
   CHANGE_STEP: 'CHANGE_STEP',
   KILL: 'KILL',
   SEIGNEUR: 'SEIGNEUR',
-  RESET_EFFECT:'RESET_EFFECT'
+  RESET_EFFECT: 'RESET_EFFECT',
 };
 
 function countReducer(state, action) {
@@ -50,52 +56,49 @@ function countReducer(state, action) {
 
       const addToEnd = [
         ...state.board,
-        { ...selectedCard, isRevealed: true, isSelected: false },
+        { ...selectedCard, isRevealed: false, isSelected: false },
       ];
       const addToStart = [
-        { ...selectedCard, isRevealed: true, isSelected: false },
+        { ...selectedCard, isRevealed: false, isSelected: false },
         ...state.board,
       ];
 
-      return {
-        ...state,
+      return updateObject(state, {
         hand: state.hand.filter((card) => !card.isSelected),
         board: action.position === 'start' ? addToStart : addToEnd,
-      };
+      });
     }
     case actions.SELECT_CARD: {
       if (state.game.step === STEPS.REVEAL) return state;
 
-      return {
-        ...state,
+      return updateObject(state, {
         hand: state.hand.map((card) =>
           card.id === action.card.id ? { ...card, isSelected: true } : card
         ),
-      };
+      });
     }
     case actions.REVEAL_CARD: {
-      return {
-        ...state,
-        board: state.board.map((card) =>
-          card.id === action.card.id ? { ...card, isRevealed: true } : card
+      return updateObject(state, {
+        board: updateItemInArray(state.board, action.card.id, (card) =>
+          updateObject(card, { isRevealed: true })
         ),
-        game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
-      };
+        game: updateObject(state.game, {
+          revealIndex: state.game.revealIndex + 1,
+        }),
+      });
     }
     case actions.SEIGNEUR: {
       const money = numberOfSideSiblings(state.board, action.card);
 
-      return {
-        ...state,
+      return updateObject(state, {
         game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
         players: {
           Antoine: { money: state.players.Antoine.money + 1 + money },
         },
-      };
+      });
     }
     case actions.CASH_IN: {
-      return {
-        ...state,
+      return updateObject(state, {
         board: state.board.map((card) =>
           card.id === action.card.id ? { ...card, money: card.money + 1 } : card
         ),
@@ -103,53 +106,46 @@ function countReducer(state, action) {
           ...state.game,
           revealIndex: state.game.revealIndex + 1,
         },
-      };
+      });
     }
     case actions.USE_EFFECT: {
-      return {
-        ...state,
+      return updateObject(state, {
         game: {
           ...state.game,
           effect: 'chose',
         },
-      };
+      });
     }
-    case actions.RESET_EFFECT:{
-      return {
-        ...state,
+    case actions.RESET_EFFECT: {
+      return updateObject(state, {
         game: {
           ...state.game,
           effect: null,
         },
-      };
+      });
     }
     case actions.CHANGE_STEP: {
-      return {
-        ...state,
+      return updateObject(state, {
         game: {
           ...state.game,
           step: action.step,
           revealIndex: 0,
           player: PLAYERS[0],
         },
-      };
+      });
     }
     case actions.KILL: {
-      console.log(action.card);
-
-      return {
-        ...state,
+      return updateObject(state, {
         board: state.board.filter((card) => card.id !== action.card.id),
         game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
-      };
+      });
     }
     case actions.NEXT_PLAYER: {
       const currentPlayerIndex = PLAYERS.findIndex(
         (player) => player === state.game.player
       );
 
-      return {
-        ...state,
+      return updateObject(state, {
         game: {
           ...state.game,
           player: PLAYERS[currentPlayerIndex + 1],
@@ -158,7 +154,7 @@ function countReducer(state, action) {
               ? STEPS.REVEAL
               : STEPS.PLAY,
         },
-      };
+      });
     }
     default: {
       throw new Error(`Unhandled action type: ${action.type}`);
