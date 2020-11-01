@@ -37,10 +37,15 @@ export default function Board() {
   useEffect(() => {
     const index = state.game.revealIndex;
     const card = state.board[index];
-    const callback = card?.effect;
+    const callback = card?.effect?.method;
 
-    if (card?.effect) {
-      setEffect(() => callback);
+    if (state.game.effect === 'chose') {
+      if (card?.effect.shouldSelect) {
+        setEffect(() => callback);
+      } else {
+        card?.effect?.method(dispatch, card);
+        dispatch({ type: actions.RESET_EFFECT });
+      }
     }
   }, [state.game.effect]);
 

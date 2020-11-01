@@ -1,16 +1,30 @@
 import React from 'react';
-import { PLAYERS, STEPS, CARDS } from './mocks';
+import { PLAYERS, STEPS, CARDS, SEIGNEURS } from './mocks';
 const CountStateContext = React.createContext();
 const CountDispatchContext = React.createContext();
 
+const numberOfSideSiblings = (array, element) => {
+  const cardIndex = array.findIndex((card) => card.id === element.id);
+
+  return [array[cardIndex - 1], array[cardIndex + 1]].reduce(
+    (acc, curr) => (curr ? acc + 1 : acc),
+    0
+  );
+};
+
 const gameState = {
-  hand: CARDS.filter((_, id) => id < 6),
+  hand: SEIGNEURS.filter((_, id) => id < 6),
   board: [],
   game: {
     player: PLAYERS[0],
     step: STEPS.PLAY,
     revealIndex: 0,
     effect: null,
+  },
+  players: {
+    Antoine: {
+      money: 1,
+    },
   },
 };
 
@@ -24,6 +38,8 @@ export const actions = {
   CASH_IN: 'CASH_IN',
   CHANGE_STEP: 'CHANGE_STEP',
   KILL: 'KILL',
+  SEIGNEUR: 'SEIGNEUR',
+  RESET_EFFECT:'RESET_EFFECT'
 };
 
 function countReducer(state, action) {
@@ -66,6 +82,17 @@ function countReducer(state, action) {
         game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
       };
     }
+    case actions.SEIGNEUR: {
+      const money = numberOfSideSiblings(state.board, action.card);
+
+      return {
+        ...state,
+        game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
+        players: {
+          Antoine: { money: state.players.Antoine.money + 1 + money },
+        },
+      };
+    }
     case actions.CASH_IN: {
       return {
         ...state,
@@ -87,6 +114,15 @@ function countReducer(state, action) {
         },
       };
     }
+    case actions.RESET_EFFECT:{
+      return {
+        ...state,
+        game: {
+          ...state.game,
+          effect: null,
+        },
+      };
+    }
     case actions.CHANGE_STEP: {
       return {
         ...state,
@@ -104,6 +140,7 @@ function countReducer(state, action) {
       return {
         ...state,
         board: state.board.filter((card) => card.id !== action.card.id),
+        game: { ...state.game, revealIndex: state.game.revealIndex + 1 },
       };
     }
     case actions.NEXT_PLAYER: {

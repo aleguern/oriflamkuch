@@ -5,7 +5,12 @@ export const CARDS = [
     isSelected: false,
     isRevealed: true,
     money: 0,
-    effect: (dispatch, card) => dispatch({ type: actions.KILL, card }),
+    effect: {
+      shouldSelect: true,
+      method: (dispatch, card) => {
+        dispatch({ type: actions.KILL, card });
+      },
+    },
     id: 6,
     name: 'ASSASSINAT',
     description: `Éliminez une carte n'importe où dans la file. Défaussez l'assassinat`,
@@ -23,7 +28,12 @@ export const CARDS = [
     isSelected: false,
     isRevealed: true,
     money: 0,
-    effect: null,
+    effect: {
+      shouldSelect: false,
+      method: (dispatch, card) => {
+        dispatch({ type: actions.SEIGNEUR, card });
+      },
+    },
     id: 1,
     name: 'SEIGNEUR',
     description: `Gagnez 1 et 1 supplémentaire par carte adjacente de votre famille`,
@@ -32,7 +42,9 @@ export const CARDS = [
     isSelected: false,
     isRevealed: true,
     money: 0,
-    effect: null,
+    effect: (dispatch, card) => {
+      dispatch({ type: actions.KILL, card });
+    },
     id: 2,
     name: 'ARCHER',
     description: `Éliminez la première ou la dernière carte de la file`,
@@ -50,7 +62,9 @@ export const CARDS = [
     isSelected: false,
     isRevealed: true,
     money: 0,
-    effect: null,
+    effect: (dispatch, card) => {
+      dispatch({ type: actions.KILL, card });
+    },
     id: 4,
     name: 'SOLDAT',
     description: `Éliminez une carte adjacente`,
@@ -96,3 +110,62 @@ export const CARDS = [
 export const STEPS = { PLAY: 'PLAY', REVEAL: 'REVEAL' };
 
 export const PLAYERS = ['Antoine', 'Sloane'];
+
+export const SEIGNEURS = [
+  {
+    isSelected: false,
+    isRevealed: true,
+    money: 0,
+    effect: {
+      shouldSelect: false,
+      method: (dispatch, card) => {
+        dispatch({ type: actions.SEIGNEUR, card });
+      },
+    },
+    id: 1,
+    name: 'SEIGNEUR',
+    description: `Gagnez 1 et 1 supplémentaire par carte adjacente de votre famille`,
+  },
+  {
+    isSelected: false,
+    isRevealed: true,
+    money: 0,
+    effect: {
+      shouldSelect: false,
+      method: (dispatch, card) => {
+        dispatch({ type: actions.SEIGNEUR, card });
+      },
+    },
+    id: 2,
+    name: 'SEIGNEUR',
+    description: `Gagnez 1 et 1 supplémentaire par carte adjacente de votre famille`,
+  },
+  {
+    isSelected: false,
+    isRevealed: true,
+    money: 0,
+    effect: {
+      shouldSelect: false,
+      method: (dispatch, card) => {
+        dispatch({ type: actions.SEIGNEUR, card });
+      },
+    },
+    id: 3,
+    name: 'SEIGNEUR',
+    description: `Gagnez 1 et 1 supplémentaire par carte adjacente de votre famille`,
+  },
+  {
+    isSelected: false,
+    isRevealed: true,
+    money: 0,
+    effect: {
+      shouldSelect: false,
+      method: (dispatch, card) => {
+        dispatch({ type: actions.SEIGNEUR, card });
+      },
+    },
+    id: 4,
+    name: 'SEIGNEUR',
+    description: `Gagnez 1 et 1 supplémentaire par carte adjacente de votre famille`,
+  },
+];
